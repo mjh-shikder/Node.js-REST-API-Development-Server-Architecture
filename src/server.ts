@@ -10,11 +10,18 @@ const server: Server = createServer((req: IncomingMessage, res: ServerResponse) 
 
     if (url === '/' && method === 'GET') {
        // console.log("This is Root Route");
-        res.writeHead(200, { 'content-type': 'text/plain' })
-        res.end('This is Root Route')
+        res.writeHead(200, { "content-type": "application/json" })
+        res.end(JSON.stringify({ message: "This is Root Route" }));
+        
+
+    } else if (url?.startsWith('/products')) {
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(JSON.stringify({ message: "This is Products Route" }));
+
+
     } else {
          res.writeHead(404, { "content-type": "text/plain" });
-         res.end("Route Not Found");
+           res.end(JSON.stringify({ message: "Route Not Found" }));
     }
     
 
