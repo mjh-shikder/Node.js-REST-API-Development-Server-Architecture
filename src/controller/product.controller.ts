@@ -56,7 +56,18 @@ export const productController = async (
         const allProducts = readProducts();
         const product = allProducts.find((p: Iproduct) => p.id === id)
         // console.log(product);
-        
+
+        //? Jodi Product ta Delete kore dewa hoy tahole ei "if" er condition ta show korbe
+        if (!product) {
+           res.writeHead(404, { "content-type": "application/json" });
+           res.end(
+             JSON.stringify({
+               message: "Product Not Exist",
+               data: null,
+             }),
+           ); 
+        }
+
         res.writeHead(200, { "content-type": "application/json" });
         res.end(JSON.stringify({
             message: "Single product retrived successfully",
