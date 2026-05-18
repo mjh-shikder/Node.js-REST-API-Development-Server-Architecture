@@ -44,11 +44,11 @@ export const productController = async (
         
         const products = readProducts(); // [{},{},{}]
 
-    res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify({
-          message: "Products Retrived Successfully",
-        data: products
-    }));
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(JSON.stringify({
+            message: "Products Retrived Successfully",
+            data: products
+        }));
     }
     
     //? Single product logic
@@ -60,7 +60,7 @@ export const productController = async (
         res.writeHead(200, { "content-type": "application/json" });
         res.end(JSON.stringify({
             message: "Single product retrived successfully",
-            data:product
+            data: product
         }))
     }
 
@@ -72,6 +72,7 @@ export const productController = async (
         
         const products = readProducts(); // [{},{},{},{}]
 
+        //* POST Method
         //? Create the new product
         const newProduct = {
             id: Date.now(),
@@ -82,18 +83,51 @@ export const productController = async (
 
         
         products.push(newProduct) // [{},{},{},{new}]
-       // console.log(products);
+        // console.log(products);
         
         insertProduct(products)
         
 
-           res.writeHead(200, { "content-type": "application/json" });
-           res.end(
-             JSON.stringify({
-               message: "Product Created Successfully",
-               data: newProduct
-             }),
-           );
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(
+            JSON.stringify({
+                message: "Product Created Successfully",
+                data: newProduct
+            }),
+        );
+
+    }
+        
+        
+        //* PUT Method
+        
+    else if (method === "PUT" && id !== null) {
+        const body = await parseBody(req)
+        const products = readProducts()
+
+        const index = products.findIndex((p:Iproduct) => p.id === id) // ei khane ami frontend e id dia e search dibo
+        console.log(index);
+        if (index < 0) {
+            res.writeHead(404, { "content-type": "application/json" });
+            res.end(JSON.stringify({
+                message: "Product Not Found!",
+                data: null
+            }))
+        }
+
+        // console.log(products[index]);
+        
+        products[index]= {id: products[index].id, ...body}
+
+        insertProduct(products) // eita db.json file ta ke edit kore
+
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: "Product Updated Successfully",
+            data: products[index]
+          }),
+        );
 
     }
 };
