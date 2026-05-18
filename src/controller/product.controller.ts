@@ -130,4 +130,37 @@ export const productController = async (
         );
 
     }
+
+    else if (method === 'DELETE' && id !== null) {
+
+        const products = readProducts()
+        const index = products.findIndex((p: Iproduct) => p.id === id)
+        
+         if (index < 0) {
+           res.writeHead(404, { "content-type": "application/json" });
+           res.end(
+             JSON.stringify({
+               message: "Product Not Found!",
+               data: null,
+             }),
+           );
+        }
+        
+        
+        products.splice(index, 1) // splice er pore first err value index, 2nd value kotya delete korte chao oitar poriman eikhane 1 ta
+        
+        insertProduct(products) // targeted id ta array theke delete korar porer ja thakbe oigula ke abar notun kore write korbe
+        
+          res.writeHead(200, { "content-type": "application/json" });
+          res.end(
+            JSON.stringify({
+              message: "Product Deleted Successfully",
+              data: products[index],
+            }),
+        );
+        
+       
+
+    }
+
 };
