@@ -1,14 +1,18 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { readProducts } from "../service/product.service";
+import { insertProduct, readProducts } from "../service/product.service";
 import type { Iproduct } from "../types/product.type";
 import { json } from "stream/consumers";
+import { parseBody } from "../utility/parseBody";
 
-export const productController = (
+//* Product Controller Function Start
+export const productController = async (
   req: IncomingMessage,
   res: ServerResponse,
 ) => {
   const url = req.url;
     const method = req.method;
+    
+    //console.log("Request", req);
     
 
     //? /products => /product/1 => ['', 'products', '1']
@@ -46,6 +50,7 @@ export const productController = (
         data: products
     }));
     }
+    
     //? Single product logic
     else if (method === "GET" && id !== null) {
         const allProducts = readProducts();
@@ -57,5 +62,38 @@ export const productController = (
             message: "Single product retrived successfully",
             data:product
         }))
+    }
+
+
+    else if (method === "POST" && url === '/products') {
+
+        const body = await parseBody(req);
+        // console.log("Body", body);
+        
+        const products = readProducts(); // [{},{},{},{}]
+
+        //? Create the new product
+        const newProduct = {
+            id: Date.now(),
+            ...body
+        }
+        
+        //console.log(newProduct);
+
+        
+        products.push(newProduct) // [{},{},{},{new}]
+       // console.log(products);
+        
+        insertProduct(products)
+        
+
+           res.writeHead(200, { "content-type": "application/json" });
+           res.end(
+             JSON.stringify({
+               message: "Product Created Successfully",
+               data: newProduct
+             }),
+           );
+
     }
 };
