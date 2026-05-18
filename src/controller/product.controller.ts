@@ -80,7 +80,7 @@ export const productController = async (
       //      }),
       //    );
       try {
-        return sendResponse(res, 404, false, "Product Not Exist", null);
+        return sendResponse(res, 404, false, "Product Does Not Exist", null);
       } catch (error) {
         return sendResponse(res, 500, false, "Something Went Wrong", error);
       }

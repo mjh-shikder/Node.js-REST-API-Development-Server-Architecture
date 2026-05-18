@@ -1,5 +1,6 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { routeHandler } from "./routes/route";
+import config from "./config";
 
 
 const server: Server = createServer((req: IncomingMessage, res: ServerResponse) => {
@@ -8,7 +9,7 @@ const server: Server = createServer((req: IncomingMessage, res: ServerResponse) 
 
 })
 
-server.listen(5000, () => {
-    console.log("server is running on port: 5000");
+server.listen(config.port, () => {
+    console.log(`server is Running on Port: ${config.port}`); //* eita kintu browser e consol hobe na eita Terminal e asbe
     
 })
